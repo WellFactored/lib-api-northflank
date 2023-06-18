@@ -9,7 +9,7 @@ sealed trait JobType
 
 case class BillingSummary(deploymentPlan: String)
 
-case class BuildStatus(status:      String, lastTransitionTime: Instant)
+case class BuildStatus(status: String, lastTransitionTime: Instant)
 
 object Docker {
   case class Command(enabled:    Boolean, value: String)
@@ -35,5 +35,13 @@ case class VcsData(
 
 case class JobSummary(id: String, appId: String, name: String, description: String, jobType: JobType)
 
-case class AddonSpec(_type: String)
-case class AddonSummary(id: String, appId: String, name: String, description: String, spec: AddonSpec)
+
+case class Plan(
+  id:             String,
+  name:           String,
+  currency:       String,
+  amountPerMonth: BigDecimal,
+  amountPerHour:  BigDecimal,
+  cpuResource:    BigDecimal,
+  ramResource:    BigDecimal
+)

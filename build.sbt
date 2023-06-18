@@ -1,13 +1,14 @@
-val circeVersion      = "0.14.3"
+val circeVersion      = "0.14.5"
 val cirisVersion      = "2.3.3"
-val enumeratumVersion = "1.7.0"
-val sttpVersion       = "1.5.2"
-val tapirVersion      = "1.1.0"
+val enumeratumVersion = "1.7.2"
+val http4sVersion     = "0.23.11"
+val sttpVersion       = "1.5.5"
+val tapirVersion      = "1.5.5"
 
 lazy val commonSettings = Seq(
   organization := "com.wellfactored",
   idePackagePrefix := Some("com.wellfactored.api.northflank"),
-  scalaVersion := "2.13.9",
+  scalaVersion := "2.13.11",
   startYear := Some(2021),
   scalacOptions := commonScalacOptions,
   versionScheme := Some("early-semver"),
@@ -43,11 +44,25 @@ lazy val endpoints =
     .aggregate(model)
     .settings(
       libraryDependencies ++= Seq(
-        "io.circe"                    %% "circe-generic"        % circeVersion,
-        "com.beachape"                %% "enumeratum-circe"     % enumeratumVersion,
-        "com.softwaremill.sttp.tapir" %% "tapir-json-circe"     % tapirVersion,
-        "com.softwaremill.sttp.tapir" %% "tapir-cats"           % tapirVersion,
-        "com.softwaremill.sttp.tapir" %% "tapir-enumeratum"     % tapirVersion
+        "io.circe"                    %% "circe-generic"    % circeVersion,
+        "com.beachape"                %% "enumeratum-circe" % enumeratumVersion,
+        "com.softwaremill.sttp.tapir" %% "tapir-json-circe" % tapirVersion,
+        "com.softwaremill.sttp.tapir" %% "tapir-cats"       % tapirVersion,
+        "com.softwaremill.sttp.tapir" %% "tapir-enumeratum" % tapirVersion
+      )
+    )
+
+lazy val http4sClient =
+  project
+    .in(file("modules/client-http4s"))
+    .settings(name := "client-http4s")
+    .settings(commonSettings)
+    .dependsOn(endpoints)
+    .aggregate(endpoints)
+    .settings(
+      libraryDependencies ++= Seq(
+        "com.softwaremill.sttp.tapir" %% "tapir-http4s-client" % tapirVersion,
+        "org.http4s"                  %% "http4s-ember-client" % http4sVersion
       )
     )
 

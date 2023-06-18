@@ -20,6 +20,6 @@ object Project {
     createdAt:   Instant,
     services:    List[Service.Summary],
     jobs:        List[JobSummary],
-    addons:      List[AddonSummary]
+    addons:      List[Addon.Summary]
   )
 }
