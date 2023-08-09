@@ -11,9 +11,12 @@ import org.http4s.implicits.http4sLiteralsSyntax
 import sttp.tapir.client.http4s.Http4sClientInterpreter
 import sttp.tapir.{auth, oneOf}
 
+import scala.annotation.unused
+
 class AddonsClient[F[_]: Async](bearerToken: String)(httpClient: Client[F]) {
   val interpreter: Http4sClientInterpreter[F] = Http4sClientInterpreter()
 
+  @unused
   def getAddons: F[Either[String, List[Addon.Summary]]] = {
     val e = AddonEndpoints.getAddons
       .errorOut(oneOf[NorthflankError](NorthflankError.badRequestVariant, NorthflankError.notFoundVariant))
@@ -27,6 +30,7 @@ class AddonsClient[F[_]: Async](bearerToken: String)(httpClient: Client[F]) {
     }
   }
 
+  @unused
   def getAddon(id: String): F[Either[String, Addon.Detail]] = {
     val e = AddonEndpoints.getAddon
       .errorOut(oneOf[NorthflankError](NorthflankError.badRequestVariant, NorthflankError.notFoundVariant))
