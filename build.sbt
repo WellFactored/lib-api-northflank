@@ -21,8 +21,8 @@ lazy val commonSettings = Seq(
 
 lazy val root = (project in file("."))
   .settings(name := "lib-api-northflank")
-  .dependsOn(model, endpoints)
-  .aggregate(model, endpoints)
+  .dependsOn(model, endpoints, http4sClient)
+  .aggregate(model, endpoints, http4sClient)
   .settings(commonSettings)
   .settings(publish / skip := true)
 
