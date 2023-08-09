@@ -27,6 +27,7 @@ jobs:
         id: version
         uses: paulhatch/semantic-version@v5.0.2
         with:
+          tag_prefix: v
           change_path: "modules"
       - name: Publish
         run: scripts/publish-scala-libs.sh
