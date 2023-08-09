@@ -1,0 +1,32 @@
+name: Build, Test and Publish main
+
+env:
+  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  build-test-publish:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - name: Set up JDK 1.8
+        uses: actions/setup-java@v1
+        with:
+          java-version: 1.8
+      - name: compile
+        run: sbt compile
+      - name: Run tests
+        run: sbt test
+      - name: Application Version
+        id: version
+        uses: paulhatch/semantic-version@v5.0.2
+        with:
+          change_path: "modules"
+      - name: Publish
+        run: scripts/publish-scala-libs.sh
