@@ -58,7 +58,7 @@ lazy val endpoints =
 lazy val http4sClient =
   project
     .in(file("modules/client-http4s"))
-    .settings(name := "client-http4s")
+    .settings(name := "api-northflank-client-http4s")
     .settings(commonSettings)
     .dependsOn(endpoints)
     .aggregate(endpoints)
