@@ -6,6 +6,7 @@ import cats.data.EitherT
 import cats.effect.{ExitCode, IO, IOApp}
 import cats.syntax.all._
 import org.http4s.ember.client.EmberClientBuilder
+import org.http4s.implicits.http4sLiteralsSyntax
 
 import scala.concurrent.duration.DurationInt
 
@@ -16,7 +17,7 @@ object Test extends IOApp {
       .withTimeout(55.seconds)
       .build
       .use { client =>
-        val servicesClient = new ServicesClient[IO](args.head)(client)
+        val servicesClient = new ServicesClient[IO](args.head, "qm-springboard", uri"https://api.northflank.com")(client)
         val plansClient    = new PlanClient[IO](client)
         val projectClient  = new ProjectClient[IO](args.head)(client)
 

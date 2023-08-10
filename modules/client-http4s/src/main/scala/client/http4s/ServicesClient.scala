@@ -6,12 +6,12 @@ import model.Service
 
 import cats.effect.Async
 import cats.syntax.all._
+import org.http4s.Uri
 import org.http4s.client.Client
-import org.http4s.implicits.http4sLiteralsSyntax
 import sttp.tapir.client.http4s.Http4sClientInterpreter
 import sttp.tapir.{auth, oneOf}
 
-class ServicesClient[F[_]: Async](bearerToken: String)(httpClient: Client[F]) {
+class ServicesClient[F[_]: Async](bearerToken: String, projectName: String, baseUrl: Uri)(httpClient: Client[F]) {
   val interpreter: Http4sClientInterpreter[F] = Http4sClientInterpreter()
 
   def getServices: F[Either[String, List[Service.Summary]]] = {
@@ -19,7 +19,7 @@ class ServicesClient[F[_]: Async](bearerToken: String)(httpClient: Client[F]) {
       .errorOut(oneOf[NorthflankError](NorthflankError.badRequestVariant, NorthflankError.notFoundVariant))
       .securityIn(auth.bearer[String]())
 
-    interpreter.toSecureRequest(e, Some(uri"https://api.northflank.com"))(bearerToken)(PaginationInput("qm-springboard")) match {
+    interpreter.toSecureRequest(e, Some(baseUrl))(bearerToken)(PaginationInput(projectName)) match {
       case (request, handler) =>
         httpClient.run(request).use(handler).map {
           handleResponse(request, _).map(_.data.services)
@@ -32,7 +32,7 @@ class ServicesClient[F[_]: Async](bearerToken: String)(httpClient: Client[F]) {
       .errorOut(oneOf[NorthflankError](NorthflankError.badRequestVariant, NorthflankError.notFoundVariant))
       .securityIn(auth.bearer[String]())
 
-    interpreter.toSecureRequest(e, Some(uri"https://api.northflank.com"))(bearerToken)(("qm-springboard", id)) match {
+    interpreter.toSecureRequest(e, Some(baseUrl))(bearerToken)((projectName, id)) match {
       case (request, handler) =>
         httpClient.run(request).use(handler).map {
           handleResponse(request, _).map(_.data)

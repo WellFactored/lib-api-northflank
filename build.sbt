@@ -3,7 +3,7 @@ val cirisVersion      = "2.3.3"
 val enumeratumVersion = "1.7.3"
 val http4sVersion     = "0.23.11"
 val sttpVersion       = "1.7.2"
-val tapirVersion      = "1.6.4"
+val tapirVersion      = "1.7.0"
 
 lazy val commonSettings = Seq(
   organization := "com.wellfactored",
