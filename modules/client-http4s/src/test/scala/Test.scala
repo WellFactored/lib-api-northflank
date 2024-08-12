@@ -4,9 +4,9 @@ import client.http4s.{PlanClient, ProjectClient, ServicesClient}
 
 import cats.data.EitherT
 import cats.effect.{ExitCode, IO, IOApp}
-import cats.syntax.all._
+import cats.syntax.all.*
 import org.http4s.ember.client.EmberClientBuilder
-import org.http4s.implicits.http4sLiteralsSyntax
+import org.http4s.implicits.{*, given}
 
 import scala.concurrent.duration.DurationInt
 
@@ -31,10 +31,9 @@ object Test extends IOApp {
           } yield {
             val monthlyPrices: Map[String, BigDecimal] = plans.groupBy(_.id).view.mapValues(_.head.amountPerMonth).toMap
 
-            details.foldLeft(BigDecimal(0.0)) {
-              case (total, service) =>
-                val planCost = monthlyPrices(service.billing.deploymentPlan)
-                total + planCost * service.deployment.instances
+            details.foldLeft(BigDecimal(0.0)) { case (total, service) =>
+              val planCost = monthlyPrices(service.billing.deploymentPlan)
+              total + planCost * service.deployment.instances
             }
           }
         }.value.map(println)

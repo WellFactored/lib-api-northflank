@@ -5,12 +5,15 @@ import model.{Plan, Project}
 import cats.syntax.all._
 import io.circe.Decoder.Result
 import io.circe.generic.semiauto.deriveCodec
-import io.circe.syntax.EncoderOps
+import io.circe.syntax.given
 import io.circe._
+import io.circe.given
+
 import sttp.model.Uri
 import sttp.tapir.generic.auto.schemaForCaseClass
 import sttp.tapir.json.circe.jsonBody
 import sttp.tapir.{DecodeResult, Endpoint, Mapping, PublicEndpoint, Schema, Validator, endpoint, query}
+import sttp.tapir.given
 
 package object endpoints {
   val v1Endpoint: Endpoint[Unit, Unit, Unit, Unit, Any] = endpoint.in("v1")
@@ -20,9 +23,9 @@ package object endpoints {
     implicit val codec: Codec[Pagination] = deriveCodec
   }
 
-  case class PaginatedResults[T: Decoder](data: T, pagination: Option[Pagination])
+  case class PaginatedResults[T](data: T, pagination: Option[Pagination])
   object PaginatedResults {
-    implicit def codec[T: Codec]: Codec[PaginatedResults[T]] = deriveCodec
+    given codec[T: Codec]: Codec[PaginatedResults[T]] = deriveCodec
   }
 
   case class PaginationParams(perPage: Option[Int], page: Option[Int], cursor: Option[String])

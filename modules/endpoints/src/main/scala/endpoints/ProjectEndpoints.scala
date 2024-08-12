@@ -8,6 +8,7 @@ import io.circe.generic.semiauto.deriveCodec
 import sttp.tapir.Endpoint
 import sttp.tapir.generic.auto.schemaForCaseClass
 import sttp.tapir.json.circe.jsonBody
+import sttp.tapir.given
 
 object ProjectEndpoints {
   case class ProjectResults(projects: List[Project.Summary])

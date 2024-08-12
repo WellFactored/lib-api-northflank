@@ -1,15 +1,15 @@
 package com.wellfactored.api.northflank
 package endpoints
 
+import model.*
 import model.Service.DeploymentStatus
 import model.Storage.EphemeralStorage
-import model._
 
 import io.circe.Codec
 import io.circe.generic.semiauto.deriveCodec
 import sttp.tapir.generic.auto.schemaForCaseClass
 import sttp.tapir.json.circe.jsonBody
-import sttp.tapir.{PublicEndpoint, path}
+import sttp.tapir.{PublicEndpoint, path, given}
 
 object ServiceEndpoints {
   implicit val serviceSummaryCodec:   Codec[Service.Summary]        = deriveCodec

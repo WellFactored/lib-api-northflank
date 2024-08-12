@@ -2,12 +2,13 @@ package com.wellfactored.api.northflank
 package endpoints
 
 import model.Addon
+import model.Addon.{Detail, DetailSpec}
 
 import io.circe.Codec
 import io.circe.generic.semiauto.deriveCodec
 import sttp.tapir.generic.auto.schemaForCaseClass
 import sttp.tapir.json.circe.jsonBody
-import sttp.tapir.{PublicEndpoint, path}
+import sttp.tapir.{PublicEndpoint, Schema, path, given}
 
 object AddonEndpoints {
 
@@ -30,7 +31,11 @@ object AddonEndpoints {
       .get
 
   case class GetAddonResponseBody(data: Addon.Detail)
-  implicit val getAddonResponseBodyCodec: Codec[GetAddonResponseBody] = deriveCodec
+  given getAddonResponseBodyCodec: Codec[GetAddonResponseBody] = deriveCodec
+
+  implicit val detailSpecSchema:           Schema[DetailSpec]           = Schema.derived[DetailSpec]
+  implicit val detailSchema:               Schema[Detail]               = Schema.derived[Detail]
+  implicit val getAddonResponseBodySchema: Schema[GetAddonResponseBody] = Schema.derived[GetAddonResponseBody]
 
   val getAddon: PublicEndpoint[(String, String), Unit, GetAddonResponseBody, Any] =
     v1Endpoint

@@ -5,9 +5,9 @@ import endpoints.{NorthflankError, PlansEndpoints}
 import model.Plan
 
 import cats.effect.Async
-import cats.syntax.all._
+import cats.syntax.all.*
 import org.http4s.client.Client
-import org.http4s.implicits.http4sLiteralsSyntax
+import org.http4s.implicits.{*, given}
 import sttp.tapir.client.http4s.Http4sClientInterpreter
 import sttp.tapir.oneOf
 

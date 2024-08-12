@@ -9,6 +9,8 @@ object Addon {
 
   case class Config(versionTag: String, lifecycleStatus: String, deployment: Addon.Deployment)
   case class DetailSpec(`type`: String, config:          Config)
-  case class Detail(id:         String, appId:           String, name: String, desctiption: String, spec: DetailSpec)
+  
+  case class Detail(id:         String, appId:           String, name: String, description: String, spec: DetailSpec)
+  
 
 }

@@ -11,12 +11,11 @@ lazy val commonSettings = Seq(
   githubTokenSource := TokenSource.Or(TokenSource.GitConfig("github.token"), TokenSource.Environment("GITHUB_TOKEN")),
   githubOwner := "wellfactored",
   githubRepository := "lib-api-northflank",
-  scalaVersion := "2.13.14",
+  scalaVersion := "3.4.2",
   startYear := Some(2021),
   scalacOptions := commonScalacOptions,
   versionScheme := Some("early-semver"),
-  idePackagePrefix := Some("com.wellfactored.api.northflank"),
-  addCompilerPlugin("com.olegpy" %% "better-monadic-for" % "0.3.1")
+  idePackagePrefix := Some("com.wellfactored.api.northflank")
 )
 
 lazy val root = (project in file("."))
@@ -75,17 +74,6 @@ lazy val commonScalacOptions = Seq(
   "-unchecked",
   "-encoding",
   "UTF-8",
-  List(
-    "-Wconf",
-    List(
-      "cat=deprecation:warning", // replacement for -deprecation
-      "cat=unchecked:error", // replacement for -unchecked
-      "cat=feature:warning", // replacement for -feature
-      "cat=lint-byname-implicit:warning-summary", // bridges causes a bunch of these
-      "cat=unused-imports:warning-verbose,", // warn on unused imports (so scalafix can remove them)
-      "any:error" // anything else is an error
-    ).mkString(",")
-  ).mkString(":"),
   "-language:higherKinds",
   "-language:postfixOps"
 )
