@@ -1,9 +1,10 @@
+
 val circeVersion      = "0.14.10"
 val cirisVersion      = "2.3.3"
 val enumeratumVersion = "1.7.4"
 val http4sVersion     = "0.23.28"
 val sttpVersion       = "1.7.11"
-val tapirVersion      = "1.11.2"
+val tapirVersion      = "1.11.3"
 
 lazy val commonSettings = Seq(
   organization := "com.wellfactored",

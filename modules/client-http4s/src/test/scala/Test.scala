@@ -1,6 +1,7 @@
 package com.wellfactored.api.northflank
 
 import client.http4s.{PlanClient, ProjectClient, ServicesClient}
+import model.ProjectId
 
 import cats.data.EitherT
 import cats.effect.{ExitCode, IO, IOApp}
@@ -17,7 +18,7 @@ object Test extends IOApp {
       .withTimeout(55.seconds)
       .build
       .use { client =>
-        val servicesClient = new ServicesClient[IO](args.head, "qm-springboard", uri"https://api.northflank.com")(client)
+        val servicesClient = new ServicesClient[IO](args.head, ProjectId("qm-springboard"), uri"https://api.northflank.com")(client)
         val plansClient    = new PlanClient[IO](client)
         val projectClient  = new ProjectClient[IO](args.head)(client)
 

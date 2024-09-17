@@ -3,6 +3,15 @@ package model
 
 import java.time.Instant
 
+opaque type ProjectId = String
+
+object ProjectId {
+  def apply(s: String): ProjectId = s
+
+  extension (ot: ProjectId) def stringValue: String = ot
+}
+
+
 object Project {
   case class Deployment(region: String)
 

@@ -2,23 +2,21 @@ package com.wellfactored.api.northflank
 
 import model.{Plan, Project}
 
-import cats.syntax.all._
+import cats.syntax.all.*
+import io.circe
+import io.circe.*
 import io.circe.Decoder.Result
 import io.circe.generic.semiauto.deriveCodec
 import io.circe.syntax.given
-import io.circe._
-import io.circe.given
-
 import sttp.model.Uri
 import sttp.tapir.generic.auto.schemaForCaseClass
 import sttp.tapir.json.circe.jsonBody
-import sttp.tapir.{DecodeResult, Endpoint, Mapping, PublicEndpoint, Schema, Validator, endpoint, query}
-import sttp.tapir.given
+import sttp.tapir.{DecodeResult, Endpoint, Mapping, PublicEndpoint, Schema, Validator, endpoint, query, given}
 
 package object endpoints {
   val v1Endpoint: Endpoint[Unit, Unit, Unit, Unit, Any] = endpoint.in("v1")
 
-  case class Pagination(hasNextPage: Boolean, count: Long)
+  case class Pagination(hasNextPage: Boolean, cursor: Option[String], count: Long)
   object Pagination {
     implicit val codec: Codec[Pagination] = deriveCodec
   }
@@ -67,5 +65,7 @@ package object endpoints {
   }
 
   implicit val uriSchema: Schema[Uri] = Schema.string
+
+  private val stringCodec = circe.Codec.from(Decoder.decodeString, Encoder.encodeString)
 
 }

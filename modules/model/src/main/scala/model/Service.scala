@@ -5,10 +5,19 @@ import sttp.model.Uri
 
 import java.time.Instant
 
+opaque type ServiceId = String
+
+object ServiceId {
+  def apply(s: String): ServiceId = s
+
+  extension (ot: ServiceId) def stringValue: String = ot
+}
+
+
 object Service {
   case class DeploymentStatus(status: String, reason: String, lastTransitionTime: Instant)
 
-  case class Summary(id: String, appId: String, name: String, description: String, serviceType: String)
+  case class Summary(id: ServiceId, appId: String, name: String, description: String, serviceType: String)
 
   case class InternalDetail(nfObjectId: String, nfObjectType: String, repository: Uri, branch: String, buildSHA: String, deployedSHA: String)
   case class Deployment(

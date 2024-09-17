@@ -3,47 +3,59 @@ package endpoints
 
 import model.*
 import model.Service.DeploymentStatus
-import model.Storage.EphemeralStorage
 
-import io.circe.Codec
+import cats.syntax.all.*
+import io.circe
 import io.circe.generic.semiauto.deriveCodec
+import io.circe.{Decoder, Encoder}
+import sttp.tapir
 import sttp.tapir.generic.auto.schemaForCaseClass
 import sttp.tapir.json.circe.jsonBody
-import sttp.tapir.{PublicEndpoint, path, given}
+import sttp.tapir.{CodecFormat, Endpoint, PublicEndpoint, Schema, path, given}
 
 object ServiceEndpoints {
-  implicit val serviceSummaryCodec:   Codec[Service.Summary]        = deriveCodec
-  implicit val buildStatusCodec:      Codec[BuildStatus]            = deriveCodec
-  implicit val deploymentStatusCodec: Codec[DeploymentStatus]       = deriveCodec
-  implicit val serviceStatusCodec:    Codec[Service.ServiceStatus]  = deriveCodec
-  implicit val billingSummaryCodec:   Codec[BillingSummary]         = deriveCodec
-  implicit val vcsDataCodec:          Codec[VcsData]                = deriveCodec
-  implicit val internalDetailCodec:   Codec[Service.InternalDetail] = deriveCodec
-  implicit val deploymentCodec:       Codec[Service.Deployment]     = deriveCodec
-  implicit val dockerCommandCodec:    Codec[Docker.Command]         = deriveCodec
-  implicit val dockerEntrypointCodec: Codec[Docker.Entrypoint]      = deriveCodec
-  implicit val dockerDetailCodec:     Codec[Docker.Detail]          = deriveCodec
-  implicit val ephemeralStorageCodec: Codec[EphemeralStorage]       = deriveCodec
-  implicit val storageSummaryCodec:   Codec[Storage.Summary]        = deriveCodec
-  implicit val serviceDetailCodec:    Codec[Service.Detail]         = deriveCodec
+
+  given circe.Codec[ProjectId]                                = stringCodec.iemap(ProjectId(_).asRight)(_.stringValue)
+  given tapir.Codec[String, ProjectId, CodecFormat.TextPlain] = tapir.Codec.string.map(ProjectId(_))(_.stringValue)
+  given Schema[ProjectId]                                     = Schema.string
+
+  given io.circe.Codec[ServiceId]                             = stringCodec.iemap(ServiceId(_).asRight)(_.stringValue)
+  given tapir.Codec[String, ServiceId, CodecFormat.TextPlain] = tapir.Codec.string.map(ServiceId.apply)(_.stringValue)
+  given Schema[ServiceId]                                     = Schema.string
+
+  given circe.Codec[Service.Summary]          = deriveCodec
+  given circe.Codec[BuildStatus]              = deriveCodec
+  given circe.Codec[DeploymentStatus]         = deriveCodec
+  given circe.Codec[Service.ServiceStatus]    = deriveCodec
+  given circe.Codec[BillingSummary]           = deriveCodec
+  given circe.Codec[VcsData]                  = deriveCodec
+  given circe.Codec[Service.InternalDetail]   = deriveCodec
+  given circe.Codec[Service.Deployment]       = deriveCodec
+  given circe.Codec[Docker.Command]           = deriveCodec
+  given circe.Codec[Docker.Entrypoint]        = deriveCodec
+  given circe.Codec[Docker.Detail]            = deriveCodec
+  given circe.Codec[Storage.EphemeralStorage] = deriveCodec
+  given storageSummaryCodec: circe.Codec[Storage.Summary] = deriveCodec
+  given serviceDetailCodec:  circe.Codec[Service.Detail]  = deriveCodec
 
   case class ServiceResults(services: List[Service.Summary])
-  implicit val getServicesDataCodec: Codec[ServiceResults] = deriveCodec
+  given circe.Codec[ServiceResults] = deriveCodec
 
-  val getServices: PublicEndpoint[PaginationInput[String], Unit, PaginatedResults[ServiceResults], Any] =
+  val getServices: PublicEndpoint[PaginationInput[ProjectId], Unit, PaginatedResults[ServiceResults], Any] =
     v1Endpoint
       .in("projects")
-      .in(path[String]("projectId"))
+      .in(path[ProjectId]("projectId"))
+      .in("services")
       .paginatedOut[ServiceResults]
 
   case class GetServiceResponseBody(data: Service.Detail)
-  implicit val getServiceResponseBodyCodec: Codec[GetServiceResponseBody] = deriveCodec
-  val getService: PublicEndpoint[(String, String), Unit, GetServiceResponseBody, Any] =
+  given circe.Codec[GetServiceResponseBody] = deriveCodec
+  val getService: Endpoint[Unit, (ProjectId, ServiceId), Unit, GetServiceResponseBody, Any] =
     v1Endpoint
       .in("projects")
-      .in(path[String]("projectId"))
+      .in(path[ProjectId]("projectId"))
       .in("services")
-      .in(path[String]("serviceId"))
+      .in(path[ServiceId]("serviceId"))
       .out(jsonBody[GetServiceResponseBody])
 
 }
