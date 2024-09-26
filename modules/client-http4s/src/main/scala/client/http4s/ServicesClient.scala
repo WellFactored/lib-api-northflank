@@ -5,6 +5,7 @@ import endpoints.ServiceEndpoints.ServiceResults
 import endpoints.{NorthflankError, PaginatedResults, Pagination, PaginationInput, PaginationParams, ServiceEndpoints}
 import model.{ProjectId, Service, ServiceId}
 
+import cats.Applicative
 import cats.effect.Async
 import cats.syntax.all.*
 import fs2.Stream
@@ -40,7 +41,6 @@ class ServicesClient[F[_]: Async](bearerToken: String, projectId: ProjectId, bas
               // Any error in the http request will manifest as an exception in the stream
               .map(response => handleResponse(request, response).toOption.get)
               .map { result =>
-                println(result.pagination)
                 val nextPageParams: Option[PaginationParams] = result.pagination match {
                   case Some(Pagination(true, Some(cursor), _)) => Some(PaginationParams(None, None, Some(cursor)))
                   case _                                       => None

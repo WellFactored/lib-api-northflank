@@ -4,7 +4,7 @@ val cirisVersion      = "2.3.3"
 val enumeratumVersion = "1.7.4"
 val http4sVersion     = "0.23.28"
 val sttpVersion       = "1.7.11"
-val tapirVersion      = "1.11.3"
+val tapirVersion      = "1.11.5"
 
 lazy val commonSettings = Seq(
   organization := "com.wellfactored",
@@ -12,7 +12,7 @@ lazy val commonSettings = Seq(
   githubTokenSource := TokenSource.Or(TokenSource.GitConfig("github.token"), TokenSource.Environment("GITHUB_TOKEN")),
   githubOwner := "wellfactored",
   githubRepository := "lib-api-northflank",
-  scalaVersion := "3.4.2",
+  scalaVersion := "3.5.1",
   startYear := Some(2021),
   scalacOptions := commonScalacOptions,
   versionScheme := Some("early-semver"),
